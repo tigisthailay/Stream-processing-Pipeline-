@@ -1,0 +1,4 @@
+kafka-python
+websocket-client
+finnhub-python
+avro-python3
