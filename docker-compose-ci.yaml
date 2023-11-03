@@ -1,0 +1,15 @@
+version: "3.6"
+
+services:
+
+  kafka:
+    build:
+      context: ./kafka
+      dockerfile: Dockerfile
+    container_name: kafka
+
+  finnhubproducer:
+    build:
+      context: ./Finnhub_Producer
+      dockerfile: Dockerfile
+    container_name: FinnhubProducer
