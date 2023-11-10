@@ -17,7 +17,7 @@ if __name__ == "__main__":
     KAFKA_SINK_TOPIC = "FinnhubTradeback"
     KAFKA_BOOTSTRAP_SERVER = "localhost:9092"
 
-    sampleDataframe = (
+    sample_df = (
             spark.readStream.format("kafka")
             .option("kafka.bootstrap.servers", KAFKA_BOOTSTRAP_SERVER)
             .option("subscribe", KAFKA_TOPIC_NAME)
@@ -25,7 +25,7 @@ if __name__ == "__main__":
             .load()
         )
     #Extract Topic information and apply suitable schema
-    base_df = sampleDataframe.selectExpr("CAST(value as STRING)", "timestamp")
+    base_df = sample_df.selectExpr("CAST(value as STRING)", "timestamp")
     base_df.printSchema()
 
     #Applying suitable schema
@@ -38,10 +38,10 @@ if __name__ == "__main__":
             .add("v", StringType())
         )
 
-    info_dataframe = base_df.select( from_json(col("value"), sample_schema).alias("info"), "timestamp" )
+    info_df = base_df.select( from_json(col("value"), sample_schema).alias("info"), "timestamp" )
 
-    info_dataframe.printSchema()
-    info_df_fin = info_dataframe.select("info.*", "timestamp")
+    info_df.printSchema()
+    info_df_fin = info_df.select("info.*", "timestamp")
     info_df_fin.printSchema()
 
     #Creating query using structured streaming
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         count(col("v")).alias("volume"),
     )
 
-    # query = query.withColumn("query", lit("QUERY3"))
+ 
     result_1 = query.selectExpr(
         "CAST(c AS STRING)",
         "CAST(col_p_alias AS STRING)",
