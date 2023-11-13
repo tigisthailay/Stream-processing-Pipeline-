@@ -13,7 +13,7 @@ class FinnhubProducer:
         self.finnhub_client = load_client(os.environ['FINNHUB_TOKEN'])
         self.producer = load_producer(f"{os.environ['KAFKA_SERVER']}:{os.environ['KAFKA_PORT']}")
         self.symbols = os.environ['FINNHUB_Symbols']
-        self.type = os.environ['FINNHUB_TYPE']
+        
 
         websocket.enableTrace(True)
         self.ws = websocket.WebSocketApp(f'wss://ws.finnhub.io?token={os.environ["FINNHUB_TOKEN"]}',
@@ -34,9 +34,9 @@ class FinnhubProducer:
         print("### closed ###")
 
     def on_open(self, ws):
-        
-        self.ws.send('{"type":type,"symbol":symbols}')
-        print(f'Subscription succeeded')
+        for symbol in self.symbols:
+            print(f'Subscription succeeded')
+            self.ws.send(f'{"type":"subscribe","symbol":"{symbol}"}')
 
 if __name__ == "__main__":
     FinnhubProducer()
