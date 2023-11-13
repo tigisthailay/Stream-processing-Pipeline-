@@ -1,20 +1,21 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
+import os
 
 if __name__ == "__main__":
     
     #Create Spark Session
     spark = (
-        SparkSession.builder.appName("Kafka Pyspark Streaming Pipeline")
+        SparkSession.builder.appName("Kafka Pyspark Stream Processing")
         .master("local[*]")
         .getOrCreate()
     )
     spark.sparkContext.setLogLevel("ERROR")
 
     #Connect Spark Streaming with Kafka topic to read Data Streams
-    KAFKA_TOPIC_NAME = "FinnhubTrade"
-    KAFKA_SINK_TOPIC = "FinnhubTradeback"
+    KAFKA_TOPIC_NAME = os.environ['KAFKA_TOPIC_NAME']
+    KAFKA_SINK_TOPIC = os.environ['KAFKA_SINK_TOPIC']
     KAFKA_BOOTSTRAP_SERVER = "localhost:9092"
 
     sample_df = (
@@ -39,18 +40,18 @@ if __name__ == "__main__":
         )
 
     info_df = base_df.select( from_json(col("value"), sample_schema).alias("info"), "timestamp" )
+    #info_df.printSchema()
 
-    info_df.printSchema()
+    #explode the multi-dimensional data to a 1D data frame by selecting suitable data
     info_df_fin = info_df.select("info.*", "timestamp")
-    info_df_fin.printSchema()
+    #info_df_fin.printSchema() 
 
     #Creating query using structured streaming
-
     query = info_df_fin.groupBy("s").agg(
         count(col("v")).alias("volume"),
     )
 
- 
+ #Expose the calculated results back to Kafka
     result_1 = query.selectExpr(
         "CAST(c AS STRING)",
         "CAST(col_p_alias AS STRING)",
