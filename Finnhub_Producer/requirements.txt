@@ -1,3 +1,4 @@
-kafka-python
 websocket-client
+kafka-python
 finnhub-python
+python-dotenv
