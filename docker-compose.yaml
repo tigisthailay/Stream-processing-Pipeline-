@@ -65,11 +65,13 @@ services:
       - kafkanet
     depends_on:
       - kafka1
+  
   stream-processing:
     build:
       context: ./stream_processing
       dockerfile: Dockerfile
     container_name: stream-processing
+    # restart: always
     env_file:
       - .env
     networks:
