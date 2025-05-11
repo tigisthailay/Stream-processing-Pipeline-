@@ -1,52 +1,115 @@
-version: '2'
+# version: "3.7"
+
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.3.0
-    hostname: zookeeper
+    image: zookeeper:3.6.1
     container_name: zookeeper
-    ports:
-      - "2181:2181"
+    expose:
+      - "2181"
+    volumes:
+      - kafka_zookeeper:/opt/zookeeper-3.6.1/data
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      kafkanet:
+        ipv4_address: 172.25.0.11
 
-  broker:
-    image: confluentinc/cp-server:7.3.0
-    hostname: broker
-    container_name: broker
-    depends_on:
-      - zookeeper
+  kafka1:
+    image: wurstmeister/kafka:2.12-2.2.0
+    container_name: kafkaa
     ports:
       - "9092:9092"
-      - "9101:9101"
-      - "29092:29092"
+      - "9093:9093"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092, PLAINTEXT_HOST://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
-    restart: on-failure
+      KAFKA_ZOOKEEPER_CONNECT: 172.25.0.11:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://172.25.0.12:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka_kafka1:/opt/kafka_2.12-2.2.0/logs
+    networks:
+      kafkanet:
+        ipv4_address: 172.25.0.12
+    depends_on:
+      - zookeeper
 
 
-
-
-  # kafka:
-  #   build:
-  #     context: ./kafka
-  #     dockerfile: Dockerfile
-  #   container_name: kafka
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    hostname: kafka-ui
+    container_name: kafka-ui
+    depends_on:
+      - kafka1
+    ports:
+      - "8083:8080" # Map the Kafka UI to localhost:8083
+    environment:
+      KAFKA_CLUSTERS_0_NAME: "local-cluster"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "172.25.0.12:9092"
+      KAFKA_CLUSTERS_0_ZOOKEEPER: "172.25.0.11:2181" # Optional if using Zookeeper
+    networks:
+      kafkanet:
+        ipv4_address: 172.25.0.14
 
   finnhubproducer:
     build:
       context: ./Finnhub_Producer
       dockerfile: Dockerfile
-    container_name: FinnhubProducer
-
-  StreamProcessing:
+    container_name: Finnhubproducer
+    # restart: always
+    env_file:
+      - .env
+    environment:
+      FINNHUB_TOKEN: ${FINNHUB_TOKEN}
+    networks:
+      - kafkanet
+    depends_on:
+      - kafka1
+  stream-processing:
     build:
-      context: ./Kafka-pyspark-streaming
+      context: ./stream_processing
       dockerfile: Dockerfile
-    container_name: StreamProcessing
+    container_name: stream-processing
+    env_file:
+      - .env
+    networks:
+      - kafkanet
+    depends_on:
+      - kafka1
+
+  # pyspark_consumer:
+  #   build:
+  #     context: ./spark_consumer
+  #     dockerfile: Dockerfile
+  #   container_name: pyspark_consumer
+  #   depends_on:
+  #     - kafka1
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     SNOWFLAKE_URL: ${SNOWFLAKE_URL}
+  #     SNOWFLAKE_USER: ${SNOWFLAKE_USER}
+  #     SNOWFLAKE_PASSWORD: ${SNOWFLAKE_PASSWORD}
+  #     SNOWFLAKE_WAREHOUSE: ${SNOWFLAKE_WAREHOUSE}
+  #     SNOWFLAKE_DATABASE: ${SNOWFLAKE_DATABASE}
+  #     SNOWFLAKE_SCHEMA: ${SNOWFLAKE_SCHEMA}
+  #     SNOWFLAKE_TABLE: ${SNOWFLAKE_TABLE}
+  #     SNOWFLAKE_ROLE: ${SNOWFLAKE_ROLE}
+
+
+    # environment:
+    #   HOME: /tmp
+
+networks:
+  kafkanet:
+    name: kafkanet
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+
+volumes:
+  kafka_zookeeper:
+  kafka_kafka1:
+  
