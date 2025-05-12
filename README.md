@@ -1,4 +1,4 @@
-# 📈 Stream Processing Pipeline
+# Real-Time Financial Data Streaming Pipeline
 
 A real-time financial data processing pipeline built with **Finnhub WebSocket**, **Apache Kafka**, **Apache Spark**, **Snowflake**, and **Docker**. This project demonstrates end-to-end streaming data ingestion, processing, and storage.
 
@@ -15,7 +15,6 @@ A real-time financial data processing pipeline built with **Finnhub WebSocket**,
 - [Data Flow](#-data-flow)
 - [Monitoring & Logging](#-monitoring--logging)
 - [Screenshots](#-screenshots)
-- [Contributing](#-contributing)
 - [Contact](#-contact)
 
 ---
@@ -32,20 +31,9 @@ This pipeline captures and processes live financial data in real time. It uses:
 
 ---
 
-## 🛠️ Architecture
+## Architecture
 
-```
-+--------------------+       +------------+      +----------------+
-|  Finnhub Producer  +-----> |   Kafka    | ---> |    Spark App   |
-+--------------------+       +------------+      +--------+-------+
-                                                  |
-                                                  v
-                                           +--------------+
-                                           |  Snowflake   |
-                                           +--------------+
-```
-
----
+<img title=" " alt="Alt text" src="/screenshots/pipeline.png" width= "1000">
 
 ## Project Structure
 
@@ -61,7 +49,7 @@ This pipeline captures and processes live financial data in real time. It uses:
 
 ---
 
-## ⚙️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -129,26 +117,10 @@ docker-compose logs -f
 
 ## Screenshots
 
-> Include any visual here (e.g., `pipeline_architecture.png`)
+<img title=" " alt="Alt text" src="/screenshots/docker-logs.png" width= "1000">
+<img title=" " alt="Alt text" src="/screenshots/kafkaui.png" width= "1000">
 
-```
-screenshots/
-├── pipline.png
-```
 
----
-
-## Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a pull request
-
----
 
 ## Contact
 
