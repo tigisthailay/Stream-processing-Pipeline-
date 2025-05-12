@@ -1,4 +1,4 @@
-# Stream Processing Pipeline
+# Real-Time Financial Data Streaming Pipeline
 
 A real-time financial data processing pipeline built with **Finnhub WebSocket**, **Apache Kafka**, **Apache Spark**, **Snowflake**, and **Docker**. This project demonstrates end-to-end streaming data ingestion, processing, and storage.
 
@@ -15,7 +15,6 @@ A real-time financial data processing pipeline built with **Finnhub WebSocket**,
 - [Data Flow](#-data-flow)
 - [Monitoring & Logging](#-monitoring--logging)
 - [Screenshots](#-screenshots)
-- [Contributing](#-contributing)
 - [Contact](#-contact)
 
 ---
@@ -122,12 +121,6 @@ docker-compose logs -f
 <img title=" " alt="Alt text" src="/screenshots/kafkaui.png" width= "1000">
 
 
-```
-screenshots/
-├── pipline.png
-```
-
----
 
 ## Contact
 
