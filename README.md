@@ -1,13 +1,9 @@
 # Real-Time Financial Data Streaming Pipeline
 ### 🔹## 📖 Medium Article Preview
 
-[![Read the full article](https://miro.medium.com/v2/resize:fit:828/format:webp/1*VkX0QBB5zFnhmRJG0yO0RQ.png)](https://medium.com/@tigisthay13/building-a-robust-real-time-financial-data-streaming-pipeline-e8fad7891ee9)
-> Click the image to read the full Medium article.
-
 A real-time financial data processing pipeline built with **Finnhub WebSocket**, **Apache Kafka**, **Apache Spark**, **Snowflake**, and **Docker**. This project demonstrates end-to-end streaming data ingestion, processing, and storage.
 
 ---
-https://medium.com/@tigisthay13/building-a-robust-real-time-financial-data-streaming-pipeline-e8fad7891ee9
 
 ## Table of Contents
 
@@ -37,8 +33,13 @@ This pipeline captures and processes live financial data in real time. It uses:
 ---
 
 ## Architecture
+## 📖 Medium Article Preview
+
+[![Read the full article](<img title=" " alt="Alt text" src="/screenshots/pipeline.png" width= "1000">)](https://medium.com/@tigisthay13/building-a-robust-real-time-financial-data-streaming-pipeline-e8fad7891ee9)
+> Click the image to read the full article on Medium.
 
 <img title=" " alt="Alt text" src="/screenshots/pipeline.png" width= "1000">
+
 
 ## Project Structure
 
