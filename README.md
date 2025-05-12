@@ -32,7 +32,6 @@ This pipeline captures and processes live financial data in real time. It uses:
 ---
 
 ## Architecture
-## 📖 Medium Article Preview
 
 [![Read the full article](./screenshots/pipeline.png)](https://medium.com/@tigisthay13/building-a-robust-real-time-financial-data-streaming-pipeline-e8fad7891ee9)
 > Click the image to read the full article on Medium.
