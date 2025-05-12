@@ -15,7 +15,6 @@ A real-time financial data processing pipeline built with **Finnhub WebSocket**,
 - [Data Flow](#-data-flow)
 - [Monitoring & Logging](#-monitoring--logging)
 - [Screenshots](#-screenshots)
-- [Contact](#-contact)
 
 ---
 
@@ -125,7 +124,3 @@ docker-compose logs -f
 <img title=" " alt="Alt text" src="/screenshots/kafkaui.png" width= "1000">
 
 
-
-## Contact
-
-For questions or feedback, feel free to contact [Tegisty Hailay](tigisthay13@gmail.com).
