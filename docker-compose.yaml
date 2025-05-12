@@ -34,7 +34,6 @@ services:
     depends_on:
       - zookeeper
 
-
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     hostname: kafka-ui
@@ -78,29 +77,6 @@ services:
       - kafkanet
     depends_on:
       - kafka1
-
-  # pyspark_consumer:
-  #   build:
-  #     context: ./spark_consumer
-  #     dockerfile: Dockerfile
-  #   container_name: pyspark_consumer
-  #   depends_on:
-  #     - kafka1
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     SNOWFLAKE_URL: ${SNOWFLAKE_URL}
-  #     SNOWFLAKE_USER: ${SNOWFLAKE_USER}
-  #     SNOWFLAKE_PASSWORD: ${SNOWFLAKE_PASSWORD}
-  #     SNOWFLAKE_WAREHOUSE: ${SNOWFLAKE_WAREHOUSE}
-  #     SNOWFLAKE_DATABASE: ${SNOWFLAKE_DATABASE}
-  #     SNOWFLAKE_SCHEMA: ${SNOWFLAKE_SCHEMA}
-  #     SNOWFLAKE_TABLE: ${SNOWFLAKE_TABLE}
-  #     SNOWFLAKE_ROLE: ${SNOWFLAKE_ROLE}
-
-
-    # environment:
-    #   HOME: /tmp
 
 networks:
   kafkanet:
