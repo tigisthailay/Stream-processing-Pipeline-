@@ -8,7 +8,7 @@ load_dotenv('/app/.env')
 
 kafka_topic_name = os.getenv("KAFKA_TOPIC_NAME")
 kafka_sink_topic = os.getenv("KAFKA_SINK_TOPIC")
-kafka_bootstrap_server = f"{os.getenv('KAFKA_SERVER')}:{os.getenv('KAFKA_PORT')}"
+kafka_bootstrap_server = os.getenv("KAFKA_BOOTSTRAP_SERVER")
 
 spark = SparkSession.builder \
     .appName("StreamProcessing") \
@@ -25,9 +25,7 @@ trade_schema = StructType([
     StructField("v", DoubleType(), True)
 ])
 
-
 # Read from Kafka
-
 raw_df = spark.readStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", kafka_bootstrap_server) \
@@ -42,7 +40,7 @@ json_df = raw_df.selectExpr("CAST(value AS STRING) as raw") \
 # Parse JSON into struct
 parsed_df = json_df.withColumn("parsed", from_json(col("json_str"), trade_schema))
 
-# ✅ Check this by showing only parsed and raw
+# Check this by showing only parsed and raw
 debug_df = parsed_df.select("parsed", "raw")
 
 # # Extract and explode data safely
@@ -73,9 +71,11 @@ final_df.writeStream \
     .option("numRows", 20) \
     .start()
 
+print("Transforming and aggregating data...")
 aggregated_df = transform_and_aggregate(final_df)
-# aggregated_df.printSchema()
-aggregated_df.show()
+aggregated_df.printSchema()
+# aggregated_df.show()
+
 
 # Output to Kafka
 aggregated_df.selectExpr("to_json(struct(*)) AS value") \
@@ -95,7 +95,7 @@ sfOptions = {
     "sfSchema": os.environ['SNOWFLAKE_SCHEMA'],
     "sfWarehouse": os.environ['SNOWFLAKE_WAREHOUSE'],
     "sfRole": os.environ['SNOWFLAKE_ROLE'],
-    "dbtable": "try_table"# os.environ['SNOWFLAKE_TABLE']
+    "dbtable": os.environ['SNOWFLAKE_TABLE']
 }
 # print( os.environ.get('SNOWFLAKE_URL'))
 SNOWFLAKE_SOURCE_NAME = "net.snowflake.spark.snowflake"
@@ -115,12 +115,12 @@ def write_to_snowflake(batch_df, batch_id):
     except Exception as e:
         print("Error in writing to Snowflake:", e)
 
-# # writing each batch to snowflake
-# final_df.writeStream \
-#     .foreachBatch(write_to_snowflake) \
-#     .outputMode("append") \
-#     .option("checkpointLocation", "/tmp/checkpoints/snowflake") \
-#     .start()
+# writing each batch to snowflake
+final_df.writeStream \
+    .foreachBatch(write_to_snowflake) \
+    .outputMode("append") \
+    .option("checkpointLocation", "/tmp/checkpoints/snowflake") \
+    .start()
 
 
 # write the aggregated data to snowflake
