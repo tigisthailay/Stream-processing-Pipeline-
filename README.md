@@ -34,18 +34,7 @@ This pipeline captures and processes live financial data in real time. It uses:
 
 ## 🛠️ Architecture
 
-```
-+--------------------+       +------------+      +----------------+
-|  Finnhub Producer  +-----> |   Kafka    | ---> |    Spark App   |
-+--------------------+       +------------+      +--------+-------+
-                                                  |
-                                                  v
-                                           +--------------+
-                                           |  Snowflake   |
-                                           +--------------+
-```
-
----
+<img title=" " alt="Alt text" src="/screenshots/pipeline.png" width= "1000">
 
 ## Project Structure
 
@@ -138,17 +127,8 @@ screenshots/
 
 ---
 
-## Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a pull request
-
----
+## CONTRIBUTERS
+- [**Tegisty Hailay**](https://github.com/tigisthailay)
 
 ## Contact
 
